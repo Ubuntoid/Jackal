@@ -43,7 +43,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -147,6 +147,14 @@
     <None Include="Resources\jackal_40.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\search_16.png" />
+    <None Include="Resources\left_14.png" />
+    <None Include="Resources\right_14.png" />
+    <None Include="Resources\update_14.png" />
+    <None Include="Resources\reload_16.png" />
+    <None Include="Resources\left_disabled_14.png" />
+    <None Include="Resources\right_disabled_14.png" />
+    <None Include="Resources\background_5.png" />
     <Content Include="xulrunner-33.0.en-US.win32\AccessibleMarshal.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

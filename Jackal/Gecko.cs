@@ -1,19 +1,16 @@
 ﻿using System;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Gecko;
 
 namespace Jackal
 {
     public class Gecko33 : IDisposable
     {
-        public GeckoWebBrowser Control { get; private set; }
-
+        public GeckoWebBrowser WebBrowser { get; private set; }
 
         public Gecko33()
         {
-            Control = new GeckoWebBrowser();
-            //Control.CreateWindow += OnCreateWindow;
+            WebBrowser = new GeckoWebBrowser();
+            WebBrowser.CreateWindow += OnCreateWindow;
         }
 
         public static void Initialize()
@@ -77,30 +74,44 @@ namespace Jackal
             };
         }
 
-        //private void OnCreateWindow(object sender, GeckoCreateWindowEventArgs e)
-        //{
-        //    Navigate(e.Uri);
-        //    e.Cancel = true;
-        //}
-
-        public async void Navigate(string url, string referrer = "")
+        private void OnCreateWindow(object sender, GeckoCreateWindowEventArgs e)
         {
-            Control.Navigate(url, GeckoLoadFlags.None, referrer, null);
-            await WhenDocumentCompleted();
+            Navigate(e.Uri);
+            e.Cancel = true;
         }
 
-        private Task WhenDocumentCompleted()
+        private bool TryCreateUri(string uriString, out Uri uri)
         {
-            var tcs = new TaskCompletionSource<bool>();
-            Control.DocumentCompleted += (s, args) => tcs.SetResult(true);
-            return tcs.Task;
+            Uri uriResult;
+            bool result = Uri.TryCreate(uriString, UriKind.Absolute, out uriResult)
+                && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+           
+
+            if (!result)
+            {
+                uri = new Uri("https://www.google.com/search?q=" + uriString);
+            }
+            else
+            {
+                uri = uriResult;
+            }
+
+            return result;
+        }
+
+        public void Navigate(string uriString, string referrer = "")
+        {
+            Uri uri;
+            TryCreateUri(uriString, out uri);
+
+            WebBrowser.Navigate(uri.AbsoluteUri, GeckoLoadFlags.None, referrer, null);
         }
 
         public void Dispose()
         {
-            if (Control != null)
+            if (WebBrowser != null)
             {
-                Control.Dispose();
+                WebBrowser.Dispose();
             }
         }
     }
